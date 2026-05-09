@@ -758,3 +758,660 @@ Aprenderás:
 - slices
 - heap y stack
 - memoria segura
+
+---
+# Profundizando en match en Rust
+
+# ¿Qué es match?
+
+`match` es una estructura de control de flujo extremadamente poderosa en :contentReference[oaicite:0]{index=0}.
+
+Permite:
+
+- comparar valores
+- ejecutar código según casos
+- manejar múltiples condiciones
+- trabajar con patrones
+- evitar errores lógicos
+
+---
+
+# Idea Principal
+
+`match` compara un valor contra múltiples posibilidades.
+
+---
+
+# Sintaxis Básica
+
+```rust
+match valor {
+
+    patron => accion,
+
+    patron => accion,
+
+    _ => accion_final
+}
+```
+
+---
+
+# Ejemplo Básico
+
+```rust
+fn main() {
+
+    let numero = 2;
+
+    match numero {
+
+        1 => println!("Uno"),
+
+        2 => println!("Dos"),
+
+        3 => println!("Tres"),
+
+        _ => println!("Otro número")
+    }
+}
+```
+
+---
+
+# Explicación Paso a Paso
+
+## match numero
+
+Rust analiza el valor de:
+- numero
+
+---
+
+# Caso 1
+
+```rust
+1 => println!("Uno")
+```
+
+Si:
+- numero == 1
+
+---
+
+# Caso 2
+
+```rust
+2 => println!("Dos")
+```
+
+Si:
+- numero == 2
+
+---
+
+# _
+
+```rust
+_ => println!("Otro número")
+```
+
+Significa:
+
+```text
+"Cualquier otro caso"
+```
+
+---
+
+# Resultado
+
+Como:
+- numero = 2
+
+Rust imprime:
+
+```text
+Dos
+```
+
+---
+
+# ¿Por Qué match es Especial?
+
+En muchos lenguajes existe:
+- switch
+
+Pero `match` es mucho más avanzado.
+
+---
+
+# Diferencias con switch
+
+| switch | match |
+|---|---|
+| Más limitado | Muy poderoso |
+| Menos seguro | Muy seguro |
+| Puede olvidar casos | Rust obliga a cubrirlos |
+| Menos flexible | Pattern matching avanzado |
+
+---
+
+# match Debe Ser Exhaustivo
+
+Esto es MUY importante.
+
+Rust obliga a manejar:
+- todos los posibles casos
+
+---
+
+# Ejemplo Incorrecto
+
+```rust
+fn main() {
+
+    let numero = 5;
+
+    match numero {
+
+        1 => println!("Uno"),
+
+        2 => println!("Dos")
+    }
+}
+```
+
+---
+
+# Error
+
+Porque faltan:
+- 3
+- 4
+- 5
+- etc.
+
+---
+
+# Solución
+
+```rust
+fn main() {
+
+    let numero = 5;
+
+    match numero {
+
+        1 => println!("Uno"),
+
+        2 => println!("Dos"),
+
+        _ => println!("Otro número")
+    }
+}
+```
+
+---
+
+# El _ (Wildcard)
+
+El `_` significa:
+
+```text
+"todo lo demás"
+```
+
+---
+
+# Es MUY usado en Rust
+
+Porque evita errores.
+
+---
+
+# match con Strings
+
+```rust
+fn main() {
+
+    let lenguaje = "Rust";
+
+    match lenguaje {
+
+        "Python" => println!("Interpretado"),
+
+        "Rust" => println!("Compilado"),
+
+        "JavaScript" => println!("Web"),
+
+        _ => println!("Otro lenguaje")
+    }
+}
+```
+
+---
+
+# Resultado
+
+```text
+Compilado
+```
+
+---
+
+# match con Booleanos
+
+```rust
+fn main() {
+
+    let activo = true;
+
+    match activo {
+
+        true => println!("Usuario activo"),
+
+        false => println!("Usuario inactivo")
+    }
+}
+```
+
+---
+
+# match con Múltiples Casos
+
+Puedes unir casos usando:
+
+```rust
+|
+```
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let numero = 2;
+
+    match numero {
+
+        1 | 2 | 3 => println!("Número pequeño"),
+
+        4 | 5 | 6 => println!("Número mediano"),
+
+        _ => println!("Número grande")
+    }
+}
+```
+
+---
+
+# Explicación
+
+## 1 | 2 | 3
+
+Significa:
+
+```text
+1 O 2 O 3
+```
+
+---
+
+# match con Rangos
+
+Rust permite usar rangos.
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let edad = 20;
+
+    match edad {
+
+        0..=12 => println!("Niño"),
+
+        13..=17 => println!("Adolescente"),
+
+        18..=59 => println!("Adulto"),
+
+        _ => println!("Adulto mayor")
+    }
+}
+```
+
+---
+
+# Explicación
+
+## 0..=12
+
+Incluye:
+- 0 hasta 12
+
+---
+
+# Resultado
+
+```text
+Adulto
+```
+
+---
+
+# match Como Expresión
+
+`match` puede devolver valores.
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let numero = 2;
+
+    let mensaje = match numero {
+
+        1 => "Uno",
+
+        2 => "Dos",
+
+        _ => "Otro"
+    };
+
+    println!("{}", mensaje);
+}
+```
+
+---
+
+# Explicación
+
+El resultado del `match` se guarda en:
+- mensaje
+
+---
+
+# Esto es MUY importante
+
+Porque en Rust:
+- casi todo es una expresión
+
+---
+
+# match con Bloques de Código
+
+Cada caso puede ejecutar múltiples líneas.
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let numero = 1;
+
+    match numero {
+
+        1 => {
+
+            println!("Número uno");
+
+            println!("Caso especial");
+        }
+
+        _ => {
+
+            println!("Otro número");
+        }
+    }
+}
+```
+
+---
+
+# match con Tuplas
+
+Aquí comienza el verdadero poder de Rust.
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let persona = ("Carlos", 20);
+
+    match persona {
+
+        ("Carlos", edad) => println!("Carlos tiene {} años", edad),
+
+        _ => println!("Otra persona")
+    }
+}
+```
+
+---
+
+# Explicación
+
+Rust:
+- desestructura la tupla
+- extrae valores
+
+---
+
+# match con Arrays
+
+```rust
+fn main() {
+
+    let numeros = [1, 2, 3];
+
+    match numeros {
+
+        [1, 2, 3] => println!("Array correcto"),
+
+        _ => println!("Otro array")
+    }
+}
+```
+
+---
+
+# match con Condiciones Extras
+
+Puedes usar:
+
+```rust
+if
+```
+
+dentro de match.
+
+---
+
+# Ejemplo
+
+```rust
+fn main() {
+
+    let numero = 8;
+
+    match numero {
+
+        x if x % 2 == 0 => println!("Número par"),
+
+        _ => println!("Número impar")
+    }
+}
+```
+
+---
+
+# Explicación
+
+## x if x % 2 == 0
+
+Significa:
+
+```text
+"si x es divisible entre 2"
+```
+
+---
+
+# match vs if
+
+| if | match |
+|---|---|
+| Bueno para pocas condiciones | Excelente para muchos casos |
+| Más flexible | Más estructurado |
+| Menos seguro | Más seguro |
+
+---
+
+# ¿Cuándo usar if?
+
+Cuando:
+- solo hay una o pocas condiciones
+
+---
+
+# ¿Cuándo usar match?
+
+Cuando:
+- hay muchos casos
+- categorías
+- menús
+- patrones
+- múltiples posibilidades
+
+---
+
+# Ejemplo Real — Menú
+
+```rust
+fn main() {
+
+    let opcion = 2;
+
+    match opcion {
+
+        1 => println!("Iniciar sesión"),
+
+        2 => println!("Configuración"),
+
+        3 => println!("Salir"),
+
+        _ => println!("Opción inválida")
+    }
+}
+```
+
+---
+
+# Ventajas de match
+
+## Más legible
+
+---
+
+## Más seguro
+
+---
+
+## Menos errores
+
+---
+
+## Muy poderoso
+
+---
+
+## Excelente para pattern matching
+
+---
+
+# Errores Comunes
+
+## Olvidar _
+
+Incorrecto:
+
+```rust
+match numero {
+
+    1 => println!("Uno")
+}
+```
+
+---
+
+# Correcto
+
+```rust
+match numero {
+
+    1 => println!("Uno"),
+
+    _ => println!("Otro")
+}
+```
+
+---
+
+# Confundir = con =>
+
+Incorrecto:
+
+```rust
+1 = println!("Uno")
+```
+
+---
+
+# Correcto
+
+```rust
+1 => println!("Uno")
+```
+
+---
+
+# Resumen
+
+Aprendiste:
+
+- qué es match
+- wildcard _
+- múltiples casos
+- rangos
+- match como expresión
+- match con tuplas
+- match con arrays
+- guards
+- diferencias entre if y match
+
+---
+
+# Idea Fundamental
+
+`match` es uno de los pilares más importantes de Rust.
+
+Muchos programas profesionales en Rust utilizan:
+- match
+- pattern matching
+- desestructuración
+
+constantemente.
